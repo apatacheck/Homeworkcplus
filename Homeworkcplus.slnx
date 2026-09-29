@@ -4,4 +4,7 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="0.0 Знакомство/0.0 Знакомство.vcxproj" Id="5634fd87-0dc4-4664-b8d7-3a18d480ca34" />
+  <Project Path="02_Math/02_Math.vcxproj" Id="85e7c41b-26da-4449-a697-9349d30eed37" />
+  <Project Path="03_Ternar/03_Ternar.vcxproj" Id="0ca95fb7-8962-4358-bf7b-fdfdac625689" />
+  <Project Path="06_files/06_files.vcxproj" Id="9b4f14bc-bd7e-40f2-8792-e15dbe6b9122" />
 </Solution>
