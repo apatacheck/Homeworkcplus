@@ -7,4 +7,5 @@
   <Project Path="02_Math/02_Math.vcxproj" Id="85e7c41b-26da-4449-a697-9349d30eed37" />
   <Project Path="03_Ternar/03_Ternar.vcxproj" Id="0ca95fb7-8962-4358-bf7b-fdfdac625689" />
   <Project Path="06_files/06_files.vcxproj" Id="9b4f14bc-bd7e-40f2-8792-e15dbe6b9122" />
+  <Project Path="Test/Test.vcxproj" Id="44606914-1a9b-4938-9284-cb53318906c4" />
 </Solution>

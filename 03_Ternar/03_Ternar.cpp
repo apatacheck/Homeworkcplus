@@ -7,7 +7,7 @@ int main() {
     SetConsoleOutputCP(1251);
 
     int n;
-    cout << "Введите двузначное число: ";
+    cout << "Введите двузначное число:";
     cin >> n;
     int digit1 = n / 10;  
     int digit2 = n % 10;  
