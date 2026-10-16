@@ -1,29 +1,37 @@
 ﻿#include <iostream>
-#include <iomanip> 
 
 int main() {
     int n;
-    std::cin >> n;
-    int flag = 0;
-    float summ = 0;
-    for (int i = 0; i < n; ++i) {
-        float x;
-        std::cin >> x;
-
-        if (x < 0) {
-            flag++;
-            if (flag == 2) {
+    if (!(std::cin >> n)) return 0;
+    for (int d = 0; ; ++d) {
+        int left = n - d;
+        if (left >= 2) {
+            bool is_prime = true;
+            for (int i = 2; i * i <= left; ++i) {
+                if (left % i == 0) {
+                    is_prime = false;
+                    break;
+                }
+            }
+            if (is_prime) {
+                std::cout << left;
                 break;
             }
-            continue;
         }
 
-        if (flag == 1) {
-            summ += x;
+        if (d > 0) {
+            int right = n + d;
+            bool is_prime = true;
+            for (int i = 2; i * i <= right; ++i) {
+                if (right % i == 0) {
+                    is_prime = false;
+                    break;
+                }
+            }
+            if (is_prime) {
+                std::cout << right;
+                break;
+            }
         }
     }
-    if (flag < 2) {
-        summ = 0;
-    }
-    std::cout << std::fixed << std::setprecision(3) << summ;
 }
