@@ -41,6 +41,9 @@ int main() {
     int* p_int = new int(8);    
     double* p_double = new double(3.14);
     float* p_float = new float(128.5f);
+	char* c_char = new char('c');
+	//std::cout << c_char  << ' '<<  *c_char;
+	std::cout << (int)c_char;
 
     std::cout << "int*:    address = " << p_int    << " value = " << *p_int    << std::endl;
     std::cout << "double*: address = " << p_double << " value = " << *p_double << std::endl;
@@ -48,13 +51,13 @@ int main() {
 
     // 3. Используя арифметику указателей, попробуйте "заглянуть" внутрь значений и за их пределы.
     std::cout << "\n№3\n" << std::endl; 
-    std::cout << "Bytes of int (8): ";
+    std::cout << "Bytes of int: ";
     print_bytes(p_int, sizeof(int));
 
-    std::cout << "Bytes of float (128.5f): ";
+    std::cout << "Bytes of float: ";
     print_bytes(p_float, sizeof(float));
 
-    std::cout << "Bytes of double (3.14): ";
+    std::cout << "Bytes of double: ";
     print_bytes(p_double, sizeof(double));
 
     std::cout << "p_int + 0 " << *(p_int + 0) << std::endl;
@@ -76,7 +79,7 @@ int main() {
     print_bytes(p_int, sizeof(int));
 
     std::cout << "\n№5\n" << std::endl; 
-    // "Потеряйте" прямой указатель на область памяти и посмотрите на содержимое с помощью арифметики указателей.
+    // 5"Потеряйте" прямой указатель на область памяти и посмотрите на содержимое с помощью арифметики указателей.
     std::cout << "true address: " << p_int << std::endl;
     p_int = p_int + 3; 
 
