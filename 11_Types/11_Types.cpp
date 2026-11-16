@@ -101,4 +101,28 @@ int main(){
 
     std::cout << "float 0.0 / 0.0: " << f_nan << " | байты: ";
     print_bytes(&f_nan, sizeof(f_nan));
+
+
+    bool b = true;
+    std::cout << "Исходный bool: " << b << " | байт: ";
+    print_bytes(&b, sizeof(b));
+
+
+    unsigned char* raw_b = reinterpret_cast<unsigned char*>(&b);
+    *raw_b = 5;
+
+    std::cout << "Испорченный bool: " << b << " | байт: ";
+    print_bytes(&b, sizeof(b));
+    std::cout << "------\n";
+
+    
+    std::string s = "123456789012345"; // ровно 15 байт (предел SSO)
+    std::cout << "На границе SSO (size=" << s.size() << "): объект=" << (void*)&s 
+              << ", данные=" << (void*)s.data() << "\n";
+
+    s += '6'; 
+    std::cout << "После +1 символа (size=" << s.size() << "): объект=" << (void*)&s 
+              << ", данные=" << (void*)s.data() << "\n";
+    std::cout << "------\n";
+
 }
