@@ -4,26 +4,53 @@
 #include <utility>
 #include <windows.h>
 
+void print_1d(const int* arr, int size) {
+    for (int i = 0; i < size; ++i) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << "\n";
+}
+
+void print_2d_static(const int arr[5][5], int rows, int cols) {
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            std::cout << arr[i][j] << "\t";
+        }
+        std::cout << "\n";
+    }
+}
+
+void print_2d_flat(const int* arr, int rows, int cols) {
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            std::cout << arr[i * cols + j] << "\t";
+        }
+        std::cout << "\n";
+    }
+}
+
+void print_2d_dyn(int* const* arr, int rows, int cols) {
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            std::cout << arr[i][j] << "\t";
+        }
+        std::cout << "\n";
+    }
+}
+
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 
     std::cout << "\n1. Одномерный статический массив\n";
 
-
     int static_uninit[5];
     std::cout << "Без инициализации: ";
-    for (int i = 0; i < 5; ++i) 
-      std::cout << static_uninit[i] << " ";
-    std::cout << "\n";
-
+    print_1d(static_uninit, 5);
 
     int static_init[5] = { 1, 2, 3, 4, 5 };
     std::cout << "С инициализацией: ";
-    for (int i = 0; i < 5; ++i)
-      std::cout << static_init[i] << " ";
-    std::cout << "\n";
-
+    print_1d(static_init, 5);
 
     std::ifstream file_static_1d("array_1d.txt");
     int size_static_1d = 0;
@@ -33,12 +60,10 @@ int main() {
     for (int i = 0; i < size_static_1d; ++i) file_static_1d >> static_arr[i];
     file_static_1d.close();
 
-
     std::cout << "Элементы и адреса:\n";
     for (int i = 0; i < size_static_1d; ++i) {
         std::cout << "static_arr[" << i << "] = " << static_arr[i] << " - адрес: " << &static_arr[i] << "\n";
     }
-
 
     std::cout << "Элемент по индексу [2]: " << static_arr[2] << "\n";
 
@@ -48,29 +73,26 @@ int main() {
     }
     std::cout << "Индекс мин. по модулю: " << min_abs_idx_1d << " (значение " << static_arr[min_abs_idx_1d] << ")\n";
 
+    std::cout << "Исходный массив до swap: ";
+    print_1d(static_arr, size_static_1d);
+
     std::swap(static_arr[0], static_arr[size_static_1d - 1]);
-    std::cout << "После swap:" << static_arr[0] << " ... " << static_arr[size_static_1d - 1] << "\n";
+    std::cout << "Массив после swap первого и последнего: ";
+    print_1d(static_arr, size_static_1d);
 
 //Массив на стеке удалится и сам
 
     std::cout << "\n2. Одномерный динамический массив\n";
 
-     
     int* dyn_uninit = new int[5];
     std::cout << "Без инициализации: ";
-    for (int i = 0; i < 5; ++i) 
-      std::cout << dyn_uninit[i] << " ";
-    std::cout << "\n";
+    print_1d(dyn_uninit, 5);
     delete[] dyn_uninit;
-
 
     int* dyn_init = new int[5]{ 1, 2, 3, 4, 5 };
     std::cout << "С инициализацией: ";
-    for (int i = 0; i < 5; ++i)
-      std::cout << dyn_init[i] << " ";
-    std::cout << "\n";
+    print_1d(dyn_init, 5);
     delete[] dyn_init;
-
 
     std::ifstream file_dyn_1d("array_1d.txt");
     int size_dyn_1d = 0;
@@ -81,13 +103,11 @@ int main() {
     for (int i = 0; i < size_dyn_1d; ++i) file_dyn_1d >> dyn_arr[i];
     file_dyn_1d.close();
 
-
     std::cout << "Элементы и адреса в куче:\n";
     for (int i = 0; i < size_dyn_1d; ++i) {
         std::cout << "dyn_arr[" << i << "] = " << dyn_arr[i] << " | адрес: " << (dyn_arr + i) << "\n";
     }
 
-   
     std::cout << "Элемент по индексу [1]: " << dyn_arr[1] << "\n";
 
     int min_abs_idx_dyn = 0;
@@ -96,25 +116,24 @@ int main() {
     }
     std::cout << "Индекс мин. по модулю: " << min_abs_idx_dyn << " (значение " << dyn_arr[min_abs_idx_dyn] << ")\n";
 
-    std::swap(dyn_arr[0], dyn_arr[size_dyn_1d - 1]);
-    std::cout << "После swap: " << dyn_arr[0] << ".." << dyn_arr[size_dyn_1d - 1] << "\n";
+    std::cout << "Исходный массив до swap: ";
+    print_1d(dyn_arr, size_dyn_1d);
 
- 
+    std::swap(dyn_arr[0], dyn_arr[size_dyn_1d - 1]);
+    std::cout << "Массив после swap первого и последнего: ";
+    print_1d(dyn_arr, size_dyn_1d);
+
     delete[] dyn_arr;
     dyn_arr = nullptr;
 // а вот тут уже можно и очистить 
 
-
     std::cout << "\n3. Двумерный статический массив\n";
 
-  
     int static_2d_uninit[2][2];
     std::cout << "Без инициализации [2][2]: " << static_2d_uninit[0][0] << " " << static_2d_uninit[0][1] << "\n";
 
-
     int s2d[2][2] = { {1, 2}, {3, 4} };
     std::cout << "С инициализацией [2][2]: " << s2d[0][0] << " " << s2d[0][1] << "\n";
-
 
     std::ifstream file_static_2d("matrix_2d.txt");
     int rows_static = 0, cols_static = 0;
@@ -125,8 +144,6 @@ int main() {
     }
     file_static_2d.close();
 
-
-
     std::cout << "Элементы и адреса\n"; //память идет строка за строкой 
     for (int i = 0; i < rows_static; ++i) {
         for (int j = 0; j < cols_static; ++j) {
@@ -135,7 +152,6 @@ int main() {
         std::cout << "\n";
     }
 
-   
     std::cout << "Элемент [1][2]: " << static_matrix[1][2] << "\n";
 
     int min_row_static = 0, min_col_static = 0;
@@ -149,39 +165,39 @@ int main() {
     }
     std::cout << "Мин. по модулю: [" << min_row_static << "][" << min_col_static << "] = " << static_matrix[min_row_static][min_col_static] << "\n";
 
+    std::cout << "Исходная матрица:\n";
+    print_2d_static(static_matrix, rows_static, cols_static);
+
     // Обмен первой и последней строк
-    for (int j = 0; j < cols_static; ++j) 
-      std::swap(static_matrix[0][j], static_matrix[rows_static - 1][j]);
-    std::cout << "Первая и последняя строки обменены\n";
+    for (int j = 0; j < cols_static; ++j)
+        std::swap(static_matrix[0][j], static_matrix[rows_static - 1][j]);
+    std::cout << "После обмена первой и последней строк:\n";
+    print_2d_static(static_matrix, rows_static, cols_static);
 
     // Обмен первого и последнего столбцов
-    for (int i = 0; i < rows_static; ++i) 
-      std::swap(static_matrix[i][0], static_matrix[i][cols_static - 1]);
-    std::cout << "Первый и последний столбцы обменены\n";
-
+    for (int i = 0; i < rows_static; ++i)
+        std::swap(static_matrix[i][0], static_matrix[i][cols_static - 1]);
+    std::cout << "После обмена первого и последнего столбцов:\n";
+    print_2d_static(static_matrix, rows_static, cols_static);
 
 //это стек, сам удалится
 
-
-
     std::cout << "\n4. Двумерный массив как единый блок памяти\n";
-
 
     int* flat_uninit = new int[2 * 2];
     std::cout << "Без инициализации new int[4]: " << flat_uninit[0] << " " << flat_uninit[1] << "\n";
     delete[] flat_uninit;
 
-    int* flat_init = new int[2 * 2]{ 10, 20, 30, 40 }; 
+    int* flat_init = new int[2 * 2]{ 10, 20, 30, 40 };
     std::cout << "С инициализацией: " << flat_init[0] << " " << flat_init[1] << "\n";
     delete[] flat_init;
-
 
     std::ifstream file_flat_2d("matrix_2d.txt");
     int rows_flat = 0, cols_flat = 0;
     int* flat_matrix = nullptr;
 
     file_flat_2d >> rows_flat >> cols_flat;
-    flat_matrix = new int[rows_flat * cols_flat]; 
+    flat_matrix = new int[rows_flat * cols_flat];
 
     for (int i = 0; i < rows_flat; ++i) {
         for (int j = 0; j < cols_flat; ++j) {
@@ -189,7 +205,6 @@ int main() {
         }
     }
     file_flat_2d.close();
-
 
     std::cout << "Элементы и адреса:\n"; //единый кусок в куче
     for (int i = 0; i < rows_flat; ++i) {
@@ -200,29 +215,34 @@ int main() {
         std::cout << "\n";
     }
 
-  
     std::cout << "Элемент [1][2]: " << flat_matrix[1 * cols_flat + 2] << "\n";
 
     int min_linear_idx = 0;
     for (int i = 1; i < rows_flat * cols_flat; ++i) {
         if (std::abs(flat_matrix[i]) < std::abs(flat_matrix[min_linear_idx])) min_linear_idx = i;
     }
-    std::cout << "Мин. по модулю: [" << (min_linear_idx / cols_flat) << "][" << (min_linear_idx % cols_flat) 
+    std::cout << "Мин. по модулю: [" << (min_linear_idx / cols_flat) << "][" << (min_linear_idx % cols_flat)
               << "] = " << flat_matrix[min_linear_idx] << "\n";
 
+    std::cout << "Исходная матрица:\n";
+    print_2d_flat(flat_matrix, rows_flat, cols_flat);
+
     // Обмен строк
-    for (int j = 0; j < cols_flat; ++j) std::swap(flat_matrix[0 * cols_flat + j], flat_matrix[(rows_flat - 1) * cols_flat + j]);
-    std::cout << "Первая и последняя строки обменены\n";
+    for (int j = 0; j < cols_flat; ++j)
+        std::swap(flat_matrix[0 * cols_flat + j], flat_matrix[(rows_flat - 1) * cols_flat + j]);
+    std::cout << "После обмена первой и последней строк:\n";
+    print_2d_flat(flat_matrix, rows_flat, cols_flat);
 
     // Обмен столбцов
-    for (int i = 0; i < rows_flat; ++i) std::swap(flat_matrix[i * cols_flat + 0], flat_matrix[i * cols_flat + (cols_flat - 1)]);
-    std::cout << "Первый и последний столбцы обменены\n";
+    for (int i = 0; i < rows_flat; ++i)
+        std::swap(flat_matrix[i * cols_flat + 0], flat_matrix[i * cols_flat + (cols_flat - 1)]);
+    std::cout << "После обмена первого и последнего столбцов:\n";
+    print_2d_flat(flat_matrix, rows_flat, cols_flat);
 
     delete[] flat_matrix;
     flat_matrix = nullptr;
 
     std::cout << "\n5. Двумерный динамический массив\n";
-
 
     int** ptrs_uninit = new int*[2];
     std::cout << "Неинициализированный массив указателей: ptrs[0] = " << (void*)ptrs_uninit[0] << "\n";
@@ -237,7 +257,6 @@ int main() {
     delete[] ptrs_init[1];
     delete[] ptrs_init;
 
-
     std::ifstream file_dyn_2d("matrix_2d.txt");
     int rows_dyn = 0, cols_dyn = 0;
     int** dyn_matrix = nullptr;
@@ -250,7 +269,6 @@ int main() {
     }
     file_dyn_2d.close();
 
-
     std::cout << "Адрес массива указателей dyn_matrix: " << dyn_matrix << "\n";
     for (int i = 0; i < rows_dyn; ++i) {
         std::cout << "Строка " << i << " (начинается по адресу " << (void*)dyn_matrix[i] << "):\n  ";
@@ -261,7 +279,6 @@ int main() {
     }
 //строки в разных несвязных местах кучи
 
-  
     std::cout << "Элемент [1][2]: " << dyn_matrix[1][2] << "\n";
 
     int min_row_dyn = 0, min_col_dyn = 0;
@@ -275,14 +292,19 @@ int main() {
     }
     std::cout << "Мин. по модулю: [" << min_row_dyn << "][" << min_col_dyn << "] = " << dyn_matrix[min_row_dyn][min_col_dyn] << "\n";
 
+    std::cout << "Исходная матрица:\n";
+    print_2d_dyn(dyn_matrix, rows_dyn, cols_dyn);
+
     // Обмен строк: меняем сами указатели 
     std::swap(dyn_matrix[0], dyn_matrix[rows_dyn - 1]);
-    std::cout << "Первая и последняя строки обменены \n";
+    std::cout << "После обмена первой и последней строк (через swap указателей):\n";
+    print_2d_dyn(dyn_matrix, rows_dyn, cols_dyn);
 
     // Обмен столбцов: только поэлементно
-    for (int i = 0; i < rows_dyn; ++i) std::swap(dyn_matrix[i][0], dyn_matrix[i][cols_dyn - 1]);
-    std::cout << "Первый и последний столбцы обменены\n";
-
+    for (int i = 0; i < rows_dyn; ++i)
+        std::swap(dyn_matrix[i][0], dyn_matrix[i][cols_dyn - 1]);
+    std::cout << "После обмена первого и последнего столбцов:\n";
+    print_2d_dyn(dyn_matrix, rows_dyn, cols_dyn);
 
     for (int i = 0; i < rows_dyn; ++i) {
         delete[] dyn_matrix[i]; // Сначала удаляем каждую строку
