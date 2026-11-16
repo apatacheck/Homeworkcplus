@@ -54,8 +54,7 @@ int main() {
 
     std::ifstream file_static_1d("array_1d.txt");
     int size_static_1d = 0;
-    const int MAX_SIZE_1D = 10;
-    int static_arr[MAX_SIZE_1D];
+    int static_arr[10];
     file_static_1d >> size_static_1d;
     for (int i = 0; i < size_static_1d; ++i) file_static_1d >> static_arr[i];
     file_static_1d.close();
