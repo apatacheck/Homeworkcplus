@@ -3,65 +3,91 @@
 #include <algorithm>
 #include <windows.h>
 
+using namespace std;
+
 struct Point {
-    int x;
-    int y;
+    int x, y;
 };
 
-long long dist_sq(const Point& p) {
-    return 1LL * p.x * p.x + 1LL * p.y * p.y;
+int dist_sq(Point p) {
+    return p.x * p.x + p.y * p.y;
 }
 
-void print_points(const std::vector<Point>& pts) {
-    for (const auto& p : pts) {
-        std::cout << "(" << p.x << "; " << p.y << ") ";
+void print_points(const vector<Point>& pts) {
+    for (Point p : pts) {
+        cout << "(" << p.x << "; " << p.y << ") ";
     }
-    std::cout << "\n";
+    cout << "\n";
+}
+
+// а) Удалить все точки из IV четверти (x > 0 и y < 0)
+void remove_fourth_quadrant(vector<Point>& pts) {
+    auto new_end = remove_if(pts.begin(), pts.end(), [](Point p) {
+        return p.x > 0 && p.y < 0;
+    });
+    pts.erase(new_end, pts.end());
+}
+
+// б) Подсчитать количество точек на прямой y = x
+int count_on_diagonal(const vector<Point>& pts) {
+    return count_if(pts.begin(), pts.end(), [](Point p) {
+        return p.x == p.y;
+    });
+}
+
+// в) Найти все наименее удалённые от (0, 0) точки
+vector<Point> find_closest_points(const vector<Point>& pts) {
+    vector<Point> res;
+    if (pts.empty()) return res;
+
+    auto min_it = min_element(pts.begin(), pts.end(), [](Point a, Point b) {
+        return dist_sq(a) < dist_sq(b);
+    });
+    int min_d = dist_sq(*min_it);
+
+    for (Point p : pts) {
+        if (dist_sq(p) == min_d) {
+            res.push_back(p);
+        }
+    }
+    return res;
+}
+
+// г) Расположить в порядке убывания x, не меняя порядок точек с одинаковым x
+void sort_by_x_desc(vector<Point>& pts) {
+    stable_sort(pts.begin(), pts.end(), [](Point a, Point b) {
+        return a.x > b.x;
+    });
 }
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
-    std::vector<Point> points = {
+
+    vector<Point> points = {
         {2, 2}, {3, -4}, {-1, 1}, {0, 0}, {5, -1}, {-2, -2}, {2, 5}, {1, -1}
     };
 
-    std::cout << "Исходные точки:\n";
-    print_points(points);
-    auto new_end = std::remove_if(points.begin(), points.end(), [](const Point& p) {
-        return p.x > 0 && p.y < 0;
-    });
-    points.erase(new_end, points.end());
-
-    std::cout << "\nа) После удаления точек из IV четверти:\n";
+    cout << "Исходные точки:\n";
     print_points(points);
 
-    auto on_line_count = std::count_if(points.begin(), points.end(), [](const Point& p) {
-        return p.x == p.y;
-    });
+    // а)
+    remove_fourth_quadrant(points);
+    cout << "\nа) После удаления точек из IV четверти:\n";
+    print_points(points);
 
-    std::cout << "\nб) Количество точек на прямой y = x: " << on_line_count << "\n";
+    // б)
+    int cnt = count_on_diagonal(points);
+    cout << "\nб) Количество точек на прямой y = x: " << cnt << "\n";
 
-    std::vector<Point> closest_points;
-    if (!points.empty()) {
-        auto min_it = std::min_element(points.begin(), points.end(), [](const Point& a, const Point& b) {
-            return dist_sq(a) < dist_sq(b);
-        });
-        long long min_d = dist_sq(*min_it);
+    // в)
+    vector<Point> closest = find_closest_points(points);
+    cout << "\nв) Наименее удалённые от (0, 0) точки:\n";
+    print_points(closest);
 
-        std::copy_if(points.begin(), points.end(), std::back_inserter(closest_points), [min_d](const Point& p) {
-            return dist_sq(p) == min_d;
-        });
-    }
-
-    std::cout << "\nв) Наименее удалённые от (0, 0) точки:\n";
-    print_points(closest_points);
-
-    std::stable_sort(points.begin(), points.end(), [](const Point& a, const Point& b) {
-        return a.x > b.x;
-    });
-
-    std::cout << "\nг) После сортировки по убыванию x:\n";
+    // г)
+    sort_by_x_desc(points);
+    cout << "\nг) После сортировки по убыванию x:\n";
     print_points(points);
 
     return 0;
